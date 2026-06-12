@@ -6,15 +6,17 @@ export class TwitterService {
   private isDryRun: boolean = false;
 
   constructor(isDryRun = false) {
-    this.isDryRun = isDryRun || process.env.NODE_ENV === 'development';
+    // Explicitly enforce hardcoded 'false' if passed from index.ts, ignoring NODE_ENV shortcuts
+    this.isDryRun = isDryRun;
 
     if (this.isDryRun) {
       console.log('[Twitter Service] ✅ Initialized in DRY-RUN mode');
       return;
     }
 
-    const appKey = process.env.TWITTER_API_KEY;
-    const appSecret = process.env.TWITTER_API_SECRET;
+    // Fallback checks to catch both common naming strategies
+    const appKey = process.env.TWITTER_API_KEY || process.env.TWITTER_CONSUMER_KEY;
+    const appSecret = process.env.TWITTER_API_SECRET || process.env.TWITTER_CONSUMER_SECRET;
     const accessToken = process.env.TWITTER_ACCESS_TOKEN;
     const accessSecret = process.env.TWITTER_ACCESS_SECRET;
 

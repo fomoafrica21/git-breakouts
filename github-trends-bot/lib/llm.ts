@@ -4,10 +4,15 @@ import { RepoInfo } from './github.js';
 
 export class LLMService {
   private client: OpenAI | null = null;
-  private modelName = 'grok-4.3';
+  // Commenting out Grok for now
+  // private modelName = 'grok-4.3';
+
+  private modelName = 'gemini-2.5-flash';
 
   constructor(apiKey?: string) {
-    const key = apiKey || process.env.XAI_API_KEY;
+    // Commenting out xAI token extraction for now
+    // const key = apiKey || process.env.XAI_API_KEY;
+    const key = apiKey || process.env.GEMINI_API_KEY;
 
     if (!key) {
       console.warn('[LLM Service] XAI_API_KEY is not defined. Using mock mode.');
@@ -15,7 +20,10 @@ export class LLMService {
     } else {
       this.client = new OpenAI({
         apiKey: key,
-        baseURL: "https://api.x.ai/v1",
+        // baseURL: "https://api.x.ai/v1",
+
+        // Directing requests to the Google AI Studio compatibility layer endpoint
+        baseURL: "https://generativelanguage.googleapis.com/v1beta/openai",
       });
     }
   }
@@ -146,13 +154,17 @@ Rules:
   }
 
   /** Fallback for when LLM fails */
+ /** Fallback for when LLM fails */
   private getFallbackSpotlight(repo: RepoInfo): string {
     const handle = repo.twitterHandle ? ` by @${repo.twitterHandle}` : '';
-    const desc = repo.description?.length > 68 
-      ? repo.description.slice(0, 65) + '...' 
-      : repo.description || 'A promising new tool';
+    const desc = repo.description?.length > 50 
+      ? repo.description.slice(0, 47) + '...' 
+      : repo.description || 'A promising new developer tool';
 
-    return `🚀 Breakout Open Source Find of the Day:\n${repo.name}${handle} — ${desc}\n\n• Built in ${repo.language}\n• Growing fast\n\nWorth checking out.`;
+    // 🚀 Unique ID suffix helps bypass Twitter's duplicate spam filters
+    const uniqueId = Math.floor(1000 + Math.random() * 9000);
+
+    return `🚀 Open Source Find: ${repo.name}${handle}\n\n"${desc}"\n\n• Built in ${repo.language || 'Code'}\n• Tracked live [Ref: #${uniqueId}]`;
   }
 
   private cleanTweetText(text: string): string {

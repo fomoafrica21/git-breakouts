@@ -1,4 +1,3 @@
-// src/github.ts
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 
@@ -10,11 +9,10 @@ export interface RepoInfo {
   description: string;
   language: string;
   stars: number;
-  forks: number;
   starsGainedToday?: number;
-  twitterHandle?: string;        // New: High value for tagging
+  twitterHandle?: string;
   createdAt: string;
-  qualityScore?: number;         // Internal ranking score
+  qualityScore?: number;
 }
 
 export class GitHubService {
