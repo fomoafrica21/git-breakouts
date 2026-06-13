@@ -9,6 +9,7 @@ export interface RepoInfo {
   description: string;
   language: string;
   stars: number;
+  forks?: number;
   starsGainedToday?: number;
   twitterHandle?: string;
   createdAt: string;

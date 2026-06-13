@@ -97,8 +97,25 @@ function getTheme(group: any[]): string {
   return langs.length > 0 ? langs.slice(0, 2).join(' & ') : 'developer';
 }
 
+import { fileURLToPath } from 'url';
+import fs from 'fs';
+
 // Run if called directly
-if (require.main === module) {
+const isMain = () => {
+  if (typeof require !== 'undefined' && require.main === module) {
+    return true;
+  }
+  try {
+    if (import.meta.url && process.argv[1]) {
+      const modulePath = fileURLToPath(import.meta.url);
+      const scriptPath = fs.realpathSync(process.argv[1]);
+      return modulePath === scriptPath;
+    }
+  } catch (e) {}
+  return false;
+};
+
+if (isMain()) {
   generateDailyContent().catch(console.error);
 }
 

@@ -31,3 +31,9 @@ export async function updatePostStatus(postId: string, status: 'posted' | 'rejec
   const updated = posts.map(p => p.id === postId ? { ...p, status } : p);
   await savePendingPosts(updated);
 }
+
+export async function updatePost(postId: string, updates: Partial<PendingPost>) {
+  const posts = await getPendingPosts();
+  const updated = posts.map(p => p.id === postId ? { ...p, ...updates } : p);
+  await savePendingPosts(updated);
+}
